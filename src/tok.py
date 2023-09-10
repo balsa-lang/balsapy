@@ -5,11 +5,18 @@ from loc import Loc
 
 class TK(Enum):
     """Token Kind enum"""
-    pass
+    IDENTIFIER = auto
+    KEYWORD = auto
+    OPERATOR = auto
+    SYMBOL = auto
+    STR = auto
+    CHAR = auto
+    INT = auto
+    FLOAT = auto
 
 @dataclass
 class Tok:
-    """A token, with a kind, and a value"""
+    """A token with a kind and a value"""
     kind: TK
-    value: str
+    value: str | int | float
     loc: Loc

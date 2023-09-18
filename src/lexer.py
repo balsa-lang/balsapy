@@ -35,13 +35,13 @@ IGNORE = [
 class TK(Enum):
     """Token type enum"""
     IDENTIFIER = auto()
-    KEYWORD = auto() # During lexing, a subset of IDENTIFIER
-    SYMBOL = auto()
-    OPERATOR = auto() # During lexing, a subset of SYMBOL
-    STR = auto()
-    CHAR = auto()
-    INT = auto()
-    FLOAT = auto() # During lexing, a subset of INT
+    KEYWORD    = auto() # During lexing, a subset of IDENTIFIER
+    SYMBOL     = auto()
+    OPERATOR   = auto() # During lexing, a subset of SYMBOL
+    STR        = auto()
+    CHAR       = auto()
+    INT        = auto()
+    FLOAT      = auto() # During lexing, a subset of INT
 
 
 @dataclass
@@ -51,11 +51,18 @@ class Tok:
     value: str | int | float
     loc: Loc
 
+    def __str__(self) -> str:
+        """Purely for debugging purposes"""
+        value = '\\n' if self.value == '\n' else self.value
+        return f"{self.kind}: '{value}' at {self.loc}"
+
 
 def lex(file: str):
     """Given a filename, return its tokens"""
     kind = None
     tok_str: str = ""
+    line = 1
+    col = 1
     with open(file) as f:
         input: str = f.read()
 
@@ -91,8 +98,15 @@ def lex(file: str):
             elif kind == TK.INT and not tok_str.isnumeric():
                 kind = TK.FLOAT
 
-            # Add token and reset everything
-            toks.append(Tok(kind, tok_str, Loc(None, None, None)))
+            toks.append(Tok(kind, tok_str, Loc(file, line, col)))
+
+            # Update location
+            col += len(tok_str)
+            if tok_str == '\n':
+                col = 1
+                line += 1
+
+            # Reset token data
             kind = None
             tok_str = ""
 
@@ -111,4 +125,8 @@ def lex(file: str):
                     kind = TK.INT
                 else:
                     kind = TK.SYMBOL
+        # If the character isn't meaningful, just update location
+        else:
+            col += 1
+
     return toks

@@ -38,7 +38,7 @@ class TK(Enum):
     KEYWORD    = auto() # During lexing, a subset of IDENTIFIER
     SYMBOL     = auto()
     OPERATOR   = auto() # During lexing, a subset of SYMBOL
-    STR        = auto()
+    STRING     = auto()
     CHAR       = auto()
     INT        = auto()
     FLOAT      = auto() # During lexing, a subset of INT
@@ -50,11 +50,6 @@ class Tok:
     kind: TK
     value: str | int | float
     loc: Loc
-
-    def __str__(self) -> str:
-        """Purely for debugging purposes"""
-        value = '\\n' if self.value == '\n' else self.value
-        return f"{self.kind}: '{value}' at {self.loc}"
 
 
 def lex(file: str):
@@ -77,14 +72,12 @@ def lex(file: str):
             case TK.IDENTIFIER:
                 tok_ended = not char.isalnum()
             case TK.SYMBOL:
-                tok_ended = (
-                    (tok_str + char not in SYMBOLS) and
-                    (tok_str + char not in OPERATORS)
-                )
-            case TK.STR:
+                new_str = tok_str + char
+                tok_ended = new_str not in SYMBOLS and new_str not in OPERATORS
+            case TK.STRING:
                 tok_ended = len(tok_str) > 1 and input[i - 1] == '"'
             case TK.CHAR:
-                tok_ended = len(tok_str) > 1 and char[i - 1] == '\''
+                tok_ended = len(tok_str) > 1 and char[i - 1] == "'"
             case TK.INT:
                 tok_ended = not (char.isnumeric() or char == '.')
 
@@ -108,7 +101,7 @@ def lex(file: str):
 
             # Reset token data
             kind = None
-            tok_str = ""
+            tok_str = ''
 
         # If the character is meaninful, find out what it means
         if char not in IGNORE:
@@ -118,8 +111,8 @@ def lex(file: str):
                 if char.isalpha():
                     kind = TK.IDENTIFIER
                 elif char == '"':
-                    kind = TK.STR
-                elif char == '\'':
+                    kind = TK.STRING
+                elif char == "'":
                     kind = TK.CHAR
                 elif char.isnumeric():
                     kind = TK.INT

@@ -1,0 +1,24 @@
+use std::io
+use std::str
+
+
+func main() {
+    u8 i = 0
+    while (i < 100) {
+        if (i % 15 == 0) {
+            io::print("FizzBuzz")
+        } else {
+            if (i % 3 == 0) {
+                io::print("Fizz")
+            } else {
+                if (i % 5 == 0) {
+                    io::print("Buzz")
+                } else {
+                    io::print(str::from(i))
+                }
+            }
+        }
+        io::print("\n")
+        i = i + 1
+    }
+}

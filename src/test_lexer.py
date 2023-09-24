@@ -6,7 +6,7 @@ from loc import Loc
 
 class TestLexer(unittest.TestCase):
     def test_even_odd(self):
-        f = '../test/even_odd.bs'
+        f = "../test/even_odd.bs"
         expected = [
             # Line 1
             Tok( TK.KEYWORD,    'use',   Loc(f,  1,  1) ),

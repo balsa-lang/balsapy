@@ -68,7 +68,7 @@ class Tok:
                 self.value = tok_str
 
 
-def lex(file: str):
+def lex(file: str) -> list[Tok]:
     """Given a filename, return its tokens"""
     kind = None
     tok_str: str = ""
@@ -119,7 +119,7 @@ def lex(file: str):
             kind = None
             tok_str = ''
 
-        # If the character is meaninful, find out what it means
+        # If the character is meaningful, find out what it means
         if char not in IGNORE:
             tok_str += char
             if kind == None:

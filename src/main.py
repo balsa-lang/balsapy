@@ -1,4 +1,3 @@
-import tok
 import loc
 import errors
 

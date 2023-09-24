@@ -25,6 +25,7 @@ KEYWORDS = [
     'func',
     'while',
     'if',
+    'else',
 ]
 
 IGNORE = [

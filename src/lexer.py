@@ -52,6 +52,21 @@ class Tok:
     value: str | int | float
     loc: Loc
 
+    def __init__(self, kind: TK, tok_str: str, loc: Loc):
+        self.kind = kind
+        self.loc = loc
+        match kind:
+            case TK.STRING:
+                self.value = tok_str.replace('"', '')
+            case TK.CHAR:
+                self.value = tok_str.replace("'", '')
+            case TK.INT:
+                self.value = int(tok_str)
+            case TK.FLOAT:
+                self.value = float(tok_str)
+            case _:
+                self.value = tok_str
+
 
 def lex(file: str):
     """Given a filename, return its tokens"""
@@ -60,7 +75,7 @@ def lex(file: str):
     line = 1
     col = 1
     with open(file) as f:
-        input: str = f.read()
+        input: str = f.read() + ' ' # Extra char so that last token is parsed
 
     # Step through input
     toks: list[Tok] = []
